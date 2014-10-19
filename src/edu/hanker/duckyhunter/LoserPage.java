@@ -47,6 +47,8 @@ public class LoserPage extends Activity {
      */
     private void redirectTo(){       
         Intent intent = new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //this.setResult(Activity.RESULT_CANCELED);
+        startActivityForResult(intent,Activity.RESULT_CANCELED);
         startActivity(intent);
         finish();
     }

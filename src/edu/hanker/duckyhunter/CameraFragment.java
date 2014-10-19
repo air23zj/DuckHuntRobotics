@@ -11,7 +11,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -50,7 +49,8 @@ public class CameraFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				new HttpAsyncTask().execute("https://agent.electricimp.com/ytNQ5QZ5SzCe?led=0");
+				new HttpAsyncTask().execute("https://agent.electricimp.com/ytNQ5QZ5SzCe?led=1");
+				new HttpAsyncTask().execute("https://agent.electricimp.com/putVqm5RC6EY?led=0");
 				Intent intent = new Intent(getActivity().getApplication(), CameraActivity.class);
 				ActivityBridge.getInstance().setBulletNum(3);
 				startActivity(intent);
@@ -58,19 +58,7 @@ public class CameraFragment extends Fragment {
 		});
 		return cameraLayout;
 	}
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		if (resultCode == Activity.RESULT_OK) {
-			new HttpAsyncTask().execute("https://agent.electricimp.com/ytNQ5QZ5SzCe?led=1");
-			new HttpAsyncTask().execute("https://agent.electricimp.com/putVqm5RC6EY?led=1");
-			
-		}else {
-			new HttpAsyncTask().execute("https://agent.electricimp.com/ytNQ5QZ5SzCe?led=0");
-			new HttpAsyncTask().execute("https://agent.electricimp.com/putVqm5RC6EY?led=0");
-		}
-	}
+
 	public static String GET(String url){
 		InputStream inputStream = null;
 		String result = "";

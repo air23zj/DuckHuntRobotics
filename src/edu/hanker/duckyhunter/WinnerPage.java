@@ -48,7 +48,8 @@ public class WinnerPage extends Activity {
      */
     private void redirectTo(){       
         Intent intent = new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        //this.setResult(Activity.RESULT_OK);
+        startActivityForResult(intent,Activity.RESULT_OK);
         finish();
     }
 }

@@ -1,8 +1,16 @@
 package edu.hanker.duckyhunter;
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,8 +30,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -33,6 +43,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.Toast;
 /**The class is created for recording view, which is a customized camera view.
  *(extends {@link Activity}, implements {@link SensorEventListener}, {@link SurfaceHolder.Callback})
  * 
@@ -129,44 +140,59 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 				   //mBirdTask.execute(); 
 		            //doSomethingNeeded(bmp);   //自己定义的实时分析预览帧视频的算法
 		            int pv = 0;
-		            int sumR = 0;
-		            int sumG = 0;
-		            int sumB = 0;
-		            for (int i = Math.round(w/2) - 4; i < Math.round(w/2) + 4; i++) {
-						for (int j = Math.round(h/2) - 4; j < Math.round(h/2) + 4; j++) {
+//		            //int sumR = 0;
+//		            //int sumG = 0;
+//		            //int sumB = 0;
+		            int flag = 0;
+		            for (int i = Math.round(w/2) - 50; i < Math.round(w/2) + 50; i++) {
+						for (int j = Math.round(h/2) - 50; j < Math.round(h/2) + 50; j++) {
 							pv = bitmapPicture.getPixel(i, j);
-							sumR = sumR + Color.red(pv);
-							sumG = sumG + Color.green(pv);
-							sumB = sumB + Color.blue(pv);
+							//sumR = sumR + Color.red(pv);
+							//sumG = sumG + Color.green(pv);
+							//sumB = sumB + Color.blue(pv);
+							if (Color.red(pv) > 140 && Color.green(pv) > 140 && Color.green(pv) > 1.3 * Color.blue(pv)) {
+								flag++;
+							}
+							if (flag > 10) {
+								break;
+							}
+						}
+						if (flag > 10) {
+							System.out.println("R:" + Color.red(pv));
+							System.out.println("G:" + Color.green(pv));
+							System.out.println("B:" + Color.blue(pv));
+							break;
 						}
 					}
-		            int R = Math.round(sumR/(8*8));
-		            int G = sumG/(8*8);
-		            int B = sumB/(8*8);
-		            System.out.println("A:"+ bitmapPicture.getHeight());
-		            System.out.println("R:" + R);
-		            System.out.println("G:" + G);
-		            System.out.println("B:" + B);
+//		            int R = Math.round(sumR/(8*8));
+//		            int G = sumG/(8*8);
+//		            int B = sumB/(8*8);
+//		            System.out.println("A:"+ bitmapPicture.getHeight());
+//		            System.out.println("R:" + R);
+//		            System.out.println("G:" + G);
+//		            System.out.println("B:" + B);
 		            
 		            
 		            int num_bullet = -1;
 		            
 		            // if color is red
-		            if (G > 1.1*R && G > 130 && G > 1.1*B) {
+		            if (flag > 10) {
 		            	Log.d(TAG, "you win!");
-		            	
+		            	new HttpAsyncTask().execute("https://agent.electricimp.com/ytNQ5QZ5SzCe?led=0");
+		    			new HttpAsyncTask().execute("https://agent.electricimp.com/putVqm5RC6EY?led=1");
 		        		bloodView.setScaleType(ScaleType.FIT_XY);
 		        		bloodView.setImageDrawable(bloodDrawable);
 		            	
-		            	Handler handler = new Handler();
+		            	/*Handler handler = new Handler();
 					    handler.postDelayed(new Runnable() {
 					    @Override
 					    public void run() {
 					    	
 				        //TODO show image here!
 					        }
-					    },550); //adding one sec delay
+					    },150);*/ //adding one sec delay
 					    //bloodView.setImageDrawable(null);
+					    //new HttpAsyncTask().execute("https://agent.electricimp.com/putVqm5RC6EY?led=0");
 					    CameraActivity.this.setResult(Activity.RESULT_OK);
 					    Intent intent = new Intent(CameraActivity.this, WinnerPage.class)
 						.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -182,6 +208,8 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 		            
 		            if (num_bullet == 0) {
 		            	CameraActivity.this.setResult(Activity.RESULT_CANCELED);
+		            	new HttpAsyncTask().execute("https://agent.electricimp.com/ytNQ5QZ5SzCe?led=1");
+		    			new HttpAsyncTask().execute("https://agent.electricimp.com/putVqm5RC6EY?led=0");
 					    Intent intent = new Intent(CameraActivity.this, LoserPage.class)
 						.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					    startActivity(intent);
@@ -249,7 +277,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 		   try {
 			   Camera.Parameters parameters = myCamera.getParameters();
 			   parameters.setPictureFormat(PixelFormat.JPEG);
-			   parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+			   //parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
 			   List<Size> sizes = parameters.getSupportedPreviewSizes();
 			   List<Size> sizes2 = parameters.getSupportedPictureSizes();
 			   Size optimalSize = getOptimalPreviewSize(sizes, w, h);
@@ -366,7 +394,65 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 //		Drawable image = getResources().getDrawable(R.drawable.gun);
 //		imageView.setImageDrawable(image);
 	}
-  
+	public static String GET(String url){
+		InputStream inputStream = null;
+		String result = "";
+		try {
+			
+			// create HttpClient
+			HttpClient httpclient = new DefaultHttpClient();
+			
+			// make GET request to the given URL
+			HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+			
+			// receive response as inputStream
+			inputStream = httpResponse.getEntity().getContent();
+			
+			// convert inputstream to string
+			if(inputStream != null)
+				result = convertInputStreamToString(inputStream);
+			else
+				result = "Did not work!";
+		
+		} catch (Exception e) {
+			Log.d("InputStream", e.getLocalizedMessage());
+		}
+		
+		return result;
+	}
+	
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException{
+        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while((line = bufferedReader.readLine()) != null)
+            result += line;
+        
+        inputStream.close();
+        return result;
+        
+    }
+	
+    public boolean isConnected(){
+    	ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    	    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+    	    if (networkInfo != null && networkInfo.isConnected()) 
+    	    	return true;
+    	    else
+    	    	return false;	
+    }
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+              
+            return GET(urls[0]);
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+        	Toast.makeText(getBaseContext(), "Received!", Toast.LENGTH_LONG).show();
+       }
+    }
 
 
 }

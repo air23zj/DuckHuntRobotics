@@ -45,6 +45,9 @@
         <activity
             android:name="edu.hanker.duckyhunter.LoserPage"
             />
+        <activity
+            android:name="edu.hanker.duckyhunter.AboutUs"
+            />
     </application>
 
 </manifest>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:orientation="vertical">
+        
+    <FrameLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:background="@drawable/title_background" >
+
+		<Button
+		    android:id="@+id/settings_button0"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center_vertical"
+		    android:layout_margin="5dp"
+		    android:padding="5dp"
+		    android:text="Settings"
+		    android:background="@drawable/btn_grey"
+		    android:textSize="16sp" />
+
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:gravity="center"
+		    android:layout_gravity="center"
+		    android:padding="6dp"
+		    android:text="About Us"
+		    android:textColor="#FFFFFFFF"
+		    android:textSize="25sp" />
+	    
+	</FrameLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+	<LinearLayout 
+	    android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical"
+	    >
+	    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:text="Duck Hunt"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:autoLink="all"
+        android:text="Presented by 4Hackers"
+        android:textSize="12sp" />
+    
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:text="Who we are is not important. \n What we do is beyond your imagination.\n\n Just Kidding.. :)"
+        android:textSize="16sp"
+        />
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:textColor="#5DD2DC"
+        android:text="Copyright 2014. 4Hackers"
+        android:textSize="14sp"
+        />
+	</LinearLayout>	
+    
+    </ScrollView>
+
+</LinearLayout>

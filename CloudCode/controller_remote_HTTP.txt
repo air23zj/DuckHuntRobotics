@@ -1,0 +1,5 @@
+kill controller
+https://agent.electricimp.com/ytNQ5QZ5SzCe?led=1
+
+Revive controller
+https://agent.electricimp.com/ytNQ5QZ5SzCe?led=0
